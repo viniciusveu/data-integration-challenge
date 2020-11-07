@@ -1,6 +1,7 @@
 #Challenge Makefile
 
 start:
+	go run main.go
 #TODO: commands necessary to start the API
 
 check:
