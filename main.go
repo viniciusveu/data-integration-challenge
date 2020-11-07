@@ -9,6 +9,8 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	model "github.com/viniciusveu/data-integration-challenge/models"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 var companies []model.Company
@@ -93,6 +95,15 @@ func main() {
 		fmt.Println("Error on load file CSV")
 		os.Exit(1)
 	}
+
+	dsn := "root:root@tcp(172.17.0.3:3306)/api_challenge?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("Connected to the database")
+	}
+	fmt.Println(db)
 
 	handleRequests()
 }
