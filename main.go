@@ -9,8 +9,6 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	model "github.com/viniciusveu/data-integration-challenge/models"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
 var companies []model.Company
@@ -55,6 +53,8 @@ func readCSV(csvName string) error  {
 			continue
 		}
 		// fmt.Println(len(line))
+		model.DB.Create(&model.Company{Name: line[0], Zip: line[1], Site: ""})
+
 		company.Name = line[0]
 		company.Zip = line[1]
 		company.Site = ""
@@ -89,21 +89,14 @@ func handleRequests() {
 func main() {
 	fmt.Println("Rest API v1.0 - Mux Routers")
 
+	model.ConnectDatabase()
+
 	err := readCSV("./assets/q1_catalog.csv")
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("Error on load file CSV")
 		os.Exit(1)
 	}
-
-	dsn := "root:root@tcp(172.17.0.3:3306)/api_challenge?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println("Connected to the database")
-	}
-	fmt.Println(db)
 
 	handleRequests()
 }
