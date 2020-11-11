@@ -43,17 +43,19 @@ func Update(c *gin.Context) {
 	
 	for index, element := range Companies {
 		//fmt.Println(index, element)
-		if err := model.DB.Where("name = ? AND zip = ?", element.Name, element.Zip).First(&company).Error; err != nil {
-			fmt.Println("Not found")
-		}
-		//fmt.Println(index, company)
-
-		var input model.UpdateCompanyInput
-		if err := c.ShouldBindJSON(&input); err != nil {
-			fmt.Println(err)
-		}	
-		fmt.Println(index, company)
-		model.DB.Model(&company).Updates(input)
+		// if err := model.DB.Where("name = ? AND zip = ?", element.Name, element.Zip).First(&company).Error; err != nil {
+		// 	fmt.Println("Not found")
+		// 	continue
+		// }
+		fmt.Println(index, element)
+		// company.Site = element.Site 
+		model.DB.Model(&company).Where("name = ? AND zip = ?", element.Name, element.Zip).Update("site", element.Site)
+		// var input model.UpdateCompanyInput
+		// if err := c.ShouldBindJSON(&input); err != nil {
+		// 	fmt.Println(err)
+		// }	
+		// fmt.Println(index, company)
+		// model.DB.Model(&company).Updates(input)
 	}
 
 
