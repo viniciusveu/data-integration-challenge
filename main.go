@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
+	"github.com/gin-gonic/gin"
 	model "github.com/viniciusveu/data-integration-challenge/models"
 	handler "github.com/viniciusveu/data-integration-challenge/handlers"
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -15,6 +15,7 @@ func main() {
 
 	model.ConnectDatabase()
 
+	//Lê o arquivo csv 1 e insere no banco
 	err := handler.ReadCSV("./assets/q1_catalog.csv")
 	if err != nil {
 		fmt.Println(err)
@@ -22,6 +23,7 @@ func main() {
 		os.Exit(1)
 	}
 
+	//Rotas
 	router.GET("/company", handler.GetAll)
 	router.PATCH("/company", handler.Update)
 

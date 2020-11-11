@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"log"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,7 +9,7 @@ import (
 	model "github.com/viniciusveu/data-integration-challenge/models"
 )
 
-
+//Retorna todos os dados da tabela companies
 func GetAll(c *gin.Context) {
 	var companies []model.Company
 	model.DB.Find(&companies)
@@ -18,11 +17,11 @@ func GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": companies})
 }
 
-
+//Atualiza os dados da tabela companies que contém o Website vindo na requisição
 func Update(c *gin.Context) {
 	var company model.Company
+
 	file, _ := c.FormFile("file")
-	log.Println(file.Filename)
 
 	// Upload the file to specific dst.
 	dst := filepath.Base(file.Filename)
@@ -31,6 +30,7 @@ func Update(c *gin.Context) {
 		return
 	}
 
+	//Lê o srquivo
 	err := ReadCSV(file.Filename)
 	if err != nil {
 		fmt.Println(err)
@@ -40,22 +40,13 @@ func Update(c *gin.Context) {
 		fmt.Printf("File %s uploaded successfully. \n", file.Filename)
 	}
 
-	
+	//Atualiza o banco
 	for index, element := range Companies {
-		//fmt.Println(index, element)
-		// if err := model.DB.Where("name = ? AND zip = ?", element.Name, element.Zip).First(&company).Error; err != nil {
-		// 	fmt.Println("Not found")
-		// 	continue
-		// }
+
 		fmt.Println(index, element)
-		// company.Site = element.Site 
+
 		model.DB.Model(&company).Where("name = ? AND zip = ?", element.Name, element.Zip).Update("site", element.Site)
-		// var input model.UpdateCompanyInput
-		// if err := c.ShouldBindJSON(&input); err != nil {
-		// 	fmt.Println(err)
-		// }	
-		// fmt.Println(index, company)
-		// model.DB.Model(&company).Updates(input)
+
 	}
 
 

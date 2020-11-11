@@ -4,13 +4,15 @@ import(
 	"fmt"
 	"os"
 	"encoding/csv"
-	//"encoding/json"
 	model "github.com/viniciusveu/data-integration-challenge/models"
 )
 
 var Companies []model.UpdateCompanyInput
 
+
+//Função que lê o arquivo CSV e cria os slices com os dados
 func ReadCSV(csvName string) error  {
+
 	csvFile, err := os.Open(csvName)
 	if err != nil {
 		fmt.Println(err)
@@ -27,20 +29,19 @@ func ReadCSV(csvName string) error  {
 		os.Exit(1)
 	}
 
+	//No caso de ser o arquivo 1 os dados são adicionados no banco com ocampo site vazio ("")
 	if len(csvLines[1]) == 2 {
-		//fmt.Println(csvLines)
+
 		for index, line := range csvLines {
 			if index == 0 {
 				continue
 			}
-			// fmt.Println(len(line))
 
 			company := model.Company{Name: line[0], Zip: line[1], Site: ""}
 			model.DB.Create(&company)
 
 		}
-	} else {
-		//var company model.Company
+	} else { //No caso do arquivo 2 é apenas criado o slice, pois a atualização será feita no handler
 
 		for index, line := range csvLines {
 			if index == 0 {
