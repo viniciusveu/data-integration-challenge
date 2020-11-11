@@ -8,26 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func handleRequests() {
+func main() {
 
 	router := gin.Default()
 	router.MaxMultipartMemory = 8 << 20  // 8 MiB
 
 	model.ConnectDatabase()
-
-	router.GET("/company", handler.GetAll)
-	router.GET("/company/:id", handler.GetOne)
-	router.POST("/company", handler.Create)
-	router.DELETE("/company/:id", handler.Delete)
-    
-	fmt.Printf("Server running")
-	router.Run(":8080")
-}
-
-func main() {
-	fmt.Println("Rest API v1.0 - Mux Routers")
-
-	handleRequests()
 
 	err := handler.ReadCSV("./assets/q1_catalog.csv")
 	if err != nil {
@@ -36,4 +22,10 @@ func main() {
 		os.Exit(1)
 	}
 
+	router.GET("/company", handler.GetAll)
+	router.PATCH("/company", handler.Update)
+
+    
+	fmt.Printf("Server running")
+	router.Run(":8000")
 }
