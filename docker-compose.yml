@@ -1,0 +1,23 @@
+version: '3.3'
+services:
+  web:
+    build: .
+    ports:
+     - "8080:8000"
+    depends_on: 
+     - mysql
+  mysql:
+    image: "mysql:5"
+    environment:
+      MYSQL_DATABASE: "api_challenge"
+      MYSQL_USER: "root"
+      MYSQL_ROOT_PASSWORD: "root"
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    volumes:
+      - my-db:/var/lib/mysql
+
+volumes:
+  my-db:
